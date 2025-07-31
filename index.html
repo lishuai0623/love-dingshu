@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>致丁舒的告白</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #000000cc, #111111cc);
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('WechatIMG855.jpg') center center / cover no-repeat;
+      filter: brightness(0.3) blur(2px);
+      z-index: -2;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .content {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #fff;
+      padding: 20px;
+      max-width: 90%;
+      animation: fadeInUp 2s ease-in-out;
+    }
+    .content h1 {
+      font-size: 3.2em;
+      margin-bottom: 0.4em;
+      color: #ffccd5;
+    }
+    .content p {
+      font-size: 1.3em;
+      line-height: 1.8em;
+      text-shadow: 0 0 5px #000;
+    }
+    button {
+      margin-top: 40px;
+      padding: 14px 28px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 6px;
+      background: #ff6699;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    button:hover {
+      background: #e05588;
+      transform: scale(1.05);
+    }
+    @keyframes fadeInUp {
+      from {
+        transform: translate(-50%, 30%);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="content">
+  <h1>致 丁舒</h1>
+  <p>亲爱的丁舒：</p>
+  <p>当我第一次遇见你，仿佛程序世界里跳出了一句意料之外的输出。</p>
+  <p>你是我逻辑代码中最温柔的异常，是我心中最独一无二的类。</p>
+  <p>你的笑，像我写过最完美的语句，每次回忆都能顺利运行。</p>
+  <p>我愿将我所有的循环都嵌套在你身边的每一天，每一次判断都以你为条件。</p>
+  <p>若你愿意，我想写一段不设终止符的程序，主函数里只有我和你。</p>
+  <p>愿你每天醒来，看到的不是 bug，而是我带着早餐的笑脸。</p>
+  <p>我想用一生时间，为你写满代码注释的情书。</p>
+  <button onclick="document.getElementById('music').play()">点我听歌啦</button>
+</div>
+<audio id="music" loop>
+  <source src="./2948734814.mp3" type="audio/mpeg">
+</audio>
+<script>
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const chars = '丁舒 爱你 永远 编程 微笑 未来 快乐 宇宙 世界'.split('');
+  const fontSize = 16;
+  const columns = Math.floor(canvas.width / fontSize);
+  const drops = Array(columns).fill(1);
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0f0';
+    ctx.font = fontSize + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height || Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 50);
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>
