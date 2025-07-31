@@ -1,131 +1,227 @@
-
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>致丁舒的告白</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #000000cc, #111111cc);
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('./WechatIMG855.jpg') center center / cover no-repeat;
-      filter: brightness(0.3) blur(2px);
-      z-index: -2;
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-    .content {
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: #fff;
-      padding: 20px;
-      max-width: 90%;
-      animation: fadeInUp 2s ease-in-out;
-    }
-    .content h1 {
-      font-size: 3.2em;
-      margin-bottom: 0.4em;
-      color: #ffccd5;
-    }
-    .content p {
-      font-size: 1.3em;
-      line-height: 1.8em;
-      text-shadow: 0 0 5px #000;
-    }
-    button {
-      margin-top: 40px;
-      padding: 14px 28px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 6px;
-      background: #ff6699;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease;
-    }
-    button:hover {
-      background: #e05588;
-      transform: scale(1.05);
-    }
-    @keyframes fadeInUp {
-      from {
-        transform: translate(-50%, 30%);
-        opacity: 0;
-      }
-      to {
-        transform: translate(-50%, 0);
-        opacity: 1;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☞致我可爱的小萍儿~</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B8B',
+                        secondary: '#FFD1DC',
+                        accent: '#FF85A1',
+                        light: '#FFF0F3',
+                        dark: '#5A3D47'
+                    },
+                    fontFamily: {
+                        cute: ['Comic Sans MS', 'Bubblegum Sans', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            }
+            .flower-animation {
+                animation: float 3s ease-in-out infinite;
+            }
+            .petal-fall {
+                animation: petalFall 8s linear infinite;
+            }
+            .heart-beat {
+                animation: heartBeat 1.5s ease-in-out infinite;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes petalFall {
+            0% { transform: translateY(-10%) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+    </style>
 </head>
-<body>
-<canvas id="matrix"></canvas>
-<div class="content">
-  <h1>致 丁舒</h1>
-  <p>亲爱的丁舒：</p>
-  <p>当我第一次遇见你，仿佛程序世界里跳出了一句意料之外的输出。</p>
-  <p>你是我逻辑代码中最温柔的异常，是我心中最独一无二的类。</p>
-  <p>你的笑，像我写过最完美的语句，每次回忆都能顺利运行。</p>
-  <p>我愿将我所有的循环都嵌套在你身边的每一天，每一次判断都以你为条件。</p>
-  <p>若你愿意，我想写一段不设终止符的程序，主函数里只有我和你。</p>
-  <p>愿你每天醒来，看到的不是 bug，而是我带着早餐的笑脸。</p>
-  <p>我想用一生时间，为你写满代码注释的情书。</p>
-  <button onclick="document.getElementById('music').play()">点我听歌啦</button>
-</div>
-<audio id="music" loop>
-  <source src="./2948734814.mp3" type="audio/mpeg">
-</audio>
-<script>
-  const canvas = document.getElementById('matrix');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const chars = '丁舒 爱你 永远 编程 微笑 未来 快乐 宇宙 世界'.split('');
-  const fontSize = 16;
-  const columns = Math.floor(canvas.width / fontSize);
-  const drops = Array(columns).fill(1);
+<body class="bg-gradient-to-br from-light to-secondary min-h-screen overflow-x-hidden font-cute">
+    <!-- 花瓣背景 -->
+    <div id="petal-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
-  function draw() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#0f0';
-    ctx.font = fontSize + 'px monospace';
-    for (let i = 0; i < drops.length; i++) {
-      const text = chars[Math.floor(Math.random() * chars.length)];
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-      if (drops[i] * fontSize > canvas.height || Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i]++;
-    }
-  }
+    <div class="container mx-auto px-4 py-8 relative z-10">
+        <!-- 页面标题 -->
+        <header class="text-center mb-12">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary mb-2 heart-beat">
+                <i class="fa fa-heart mr-2"></i>☞致我可爱的小萍儿~
+            </h1>
+            <p class="text-dark/70 text-lg">每天为你带来心动与芳香</p>
+        </header>
 
-  setInterval(draw, 50);
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-</script>
+        <!-- 主要内容区 -->
+        <main class="max-w-3xl mx-auto">
+            <!-- 情话卡片 -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 mb-12 transform transition-all duration-500 hover:shadow-2xl">
+                <div class="flex justify-center mb-6">
+                    <div class="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center flower-animation">
+                        <i class="fa fa-comment text-4xl text-primary"></i>
+                    </div>
+                </div>
+                <h2 class="text-xl text-dark/80 mb-4 text-center">今日情话</h2>
+                <div id="quote-content" class="text-[clamp(1.2rem,3vw,1.8rem)] text-center text-dark min-h-[120px] flex items-center justify-center px-4">
+                    <p>加载中... 正在为你准备心动瞬间</p>
+                </div>
+                <div class="text-center mt-6">
+                    <button id="refresh-quote" class="bg-primary hover:bg-accent text-white py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105">
+                        <i class="fa fa-refresh mr-2"></i>你以为只有这一种说法吗？点击换一个试试呢~（xi起牙巴笑）
+                    </button>
+                </div>
+            </div>
+
+            <!-- 动态鲜花展示 -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 relative overflow-hidden">
+                <h2 class="text-xl text-dark/80 mb-8 text-center">绽放的鲜花与美食,都只属于你</h2>
+                <div id="flower-garden" class="flex flex-wrap justify-center gap-8 min-h-[300px]">
+                    <!-- 动态生成的花朵将在这里显示 -->
+                    <div class="flex items-center justify-center w-full h-64">
+                        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="mt-16 text-center text-dark/60 text-sm">
+            <p>用爱编织的小窝 <i class="fa fa-heart text-primary"></i></p>
+        </footer>
+    </div>
+
+    <script>
+        // emoji表情数组
+        const flowerEmojis = ['🌸', '🌺', '🌻', '🌼', '🌷', '💐', '❀', '🌹', '🌾', '🌿','🍎','🌰','🍑','🥭','🍌','🫐','🍓','🍒','🍋','🍉','🍇','🍈','🍊','🍍','🍏','🍎','🍐','🍑','🍒','🍓','🍔','🍕','🍖','🍗','🍘','🍙','🍚','🍛','🍜','🍝','🍞','🍟','🍠','🍡','🍢','🍣','🍤','🍥','🍦','🍧','🍨','🍩','🍪','🍫','🍬','🍭','🍮','🍯','🍰','🍱','🍲','🍳','🍴','🍵','🍶','🍷','🍸','🍹','🍺','🍻','🍼','🍽','🍾','🍿','🚄','✈️','🥥','🚗','🦌','🐶','🐱','🎩','🍬','🐷'];
+        const flowerContainer = document.getElementById('flower-garden');
+        const petalContainer = document.getElementById('petal-container');
+        const quoteContent = document.getElementById('quote-content');
+        const refreshButton = document.getElementById('refresh-quote');
+    
+        // 生成随机花朵
+        function generateFlowers() {
+            flowerContainer.innerHTML = '';
+            const count = Math.floor(window.innerWidth / 100) + 3;
+            
+            for (let i = 0; i < count; i++) {
+                const flower = document.createElement('div');
+                const size = Math.random() * 40 + 60;
+                const emoji = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+                const delay = Math.random() * 2;
+                const rotation = Math.random() * 40 - 20;
+                const scale = Math.random() * 0.5 + 0.8;
+                
+                flower.className = 'flower-animation flex items-center justify-center';
+                flower.style.fontSize = `${size}px`;
+                flower.style.animationDelay = `${delay}s`;
+                flower.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                flower.style.transition = 'all 0.3s ease';
+                flower.innerHTML = emoji;
+                flower.title = '敢点下我吗?（点我试试吧~）';
+                
+                flower.addEventListener('click', () => {
+                    const newEmoji = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+                    flower.innerHTML = newEmoji;
+                });
+                
+                flowerContainer.appendChild(flower);
+            }
+        }
+    
+        // 创建花瓣飘落效果
+        function createPetals() {
+            if (window.innerWidth < 768) return; // 移动端不显示过多花瓣
+            
+            const petal = document.createElement('div');
+            const size = Math.random() * 15 + 10;
+            const left = Math.random() * 100;
+            const emoji = ['❀', '✿', '🌼', '🌸','❄️','🌞','🌬️'][Math.floor(Math.random() * 4)];
+            const duration = Math.random() * 10 + 10;
+            const delay = Math.random() * 5;
+            const rotation = Math.random() * 360;
+            
+            petal.className = 'petal-fall absolute pointer-events-none';
+            petal.style.left = `${left}%`;
+            petal.style.fontSize = `${size}px`;
+            petal.style.animationDuration = `${duration}s`;
+            petal.style.animationDelay = `${delay}s`;
+            petal.style.transform = `rotate(${rotation}deg)`;
+            petal.innerHTML = emoji;
+            
+            petalContainer.appendChild(petal);
+            
+            // 花瓣动画结束后移除元素
+            setTimeout(() => {
+                petal.remove();
+            }, (duration + delay) * 1000);
+        }
+    
+        // 获取情话
+        async function getLoveQuote() {
+            try {
+                quoteContent.innerHTML = '<p class="text-primary animate-pulse">正在为你准备心动瞬间...</p>';
+                console.log('开始请求情话...');
+                // 使用代理服务解决CORS问题
+                // 添加随机参数避免缓存
+                const timestamp = new Date().getTime();
+                const random = Math.floor(Math.random() * 1000000);
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const targetUrl = 'https://api.1314.cool/words/api.php';
+                const urlWithCacheBuster = `${targetUrl}?t=${timestamp}&r=${random}`;
+                const response = await fetch(proxyUrl + encodeURIComponent(urlWithCacheBuster));
+                
+                
+                if (!response.ok) throw new Error('情话获取失败');
+                const text = await response.text();
+                quoteContent.innerHTML = `<p class="text-dark">${text}</p>`;
+            } catch (error) {
+                console.error('情话API错误:', error);
+                quoteContent.innerHTML = '<p class="text-red-500">哎呀，情话迷路了~ 点击刷新再试一次吧</p>';
+            }
+        }
+    
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            getLoveQuote();
+            generateFlowers();
+            
+            // 定时生成花瓣
+            setInterval(createPetals, 800);
+            
+            // 确保刷新按钮事件正确绑定
+            if (refreshButton) {
+                console.log('刷新按钮已找到，绑定点击事件');
+                // 先移除可能存在的事件监听器
+                refreshButton.removeEventListener('click', getLoveQuote);
+                // 再添加事件监听器
+                refreshButton.addEventListener('click', getLoveQuote);
+            } else {
+                console.error('未找到刷新按钮');
+            }
+        });
+    
+        // 窗口大小改变时重新生成花朵
+        window.addEventListener('resize', generateFlowers);
+    </script>
 </body>
 </html>
